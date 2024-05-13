@@ -28,6 +28,30 @@ export const App: React.FC = () => {
     "tasks",
     fetchTasks
   );
+  const queryClient = useQueryClient(); // QueryClientを取得
+
+  const handlePostClick = async () => {
+    try {
+      const response = await fetch(TasksURL, {
+        method: "POST", // HTTPメソッドとしてPOSTを指定
+        headers: {
+          "Content-Type": "application/json", // コンテンツタイプとしてJSONを指定
+        },
+      });
+
+      console.log(response.status);
+
+      if (!response.ok) {
+        throw new Error("Failed to post the new task");
+      }
+
+      console.log("Posted successfully:", await response.text()); // レスポンスをテキストで表示
+      queryClient.refetchQueries("tasks");
+    } catch (error) {
+      console.error("Error posting task:", error);
+    }
+  };
+
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
@@ -43,6 +67,12 @@ export const App: React.FC = () => {
           </li>
         ))}
       </ul>
+      <button
+        onClick={handlePostClick}
+        className="bg-blue-500 text-white font-bold py-2 px-4 rounded"
+      >
+        POST
+      </button>
     </div>
   );
 };
