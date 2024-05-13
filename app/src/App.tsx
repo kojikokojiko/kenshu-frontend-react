@@ -58,6 +58,24 @@ export const App: React.FC = () => {
     }
   };
 
+  const handleComplete = async (id) => {
+    const now = new Date().toISOString();
+    // APIリクエストを送信してデータを更新
+    const response = await fetch(`${tasksURL}/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ finishedAt: now }), // editTextは編集された新しいタイトル
+    });
+    if (response.ok) {
+      queryClient.refetchQueries("tasks");
+    } else {
+      // エラーハンドリング
+      console.error("Failed to update the task.");
+    }
+  };
+
   const handleChange = (e) => {
     setEditText(e.target.value);
   };
@@ -122,7 +140,15 @@ export const App: React.FC = () => {
                 }}
               />
             ) : (
-              <span className="flex-1 text-gray-700">{task.title}</span>
+              <span
+                className={`flex-1 ${
+                  task.finishedAt
+                    ? "text-gray-400 line-through"
+                    : "text-gray-700"
+                }`}
+              >
+                {task.title}
+              </span>
             )}
 
             <button
@@ -147,6 +173,12 @@ export const App: React.FC = () => {
                 Edit
               </button>
             )}
+            <button
+              onClick={() => handleComplete(task.id)}
+              className="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors duration-150 ease-in-out"
+            >
+              完了
+            </button>
           </li>
         ))}
       </ul>
