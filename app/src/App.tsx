@@ -86,7 +86,7 @@ export const App: React.FC = () => {
       throw new Error("Failed to fetch tasks");
     }
     // ここであえて遅延を追加
-    await new Promise((resolve) => setTimeout(resolve, 500)); // 2秒間の遅延
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // 2秒間の遅延
     return response.json();
   };
 
@@ -112,10 +112,7 @@ export const App: React.FC = () => {
     }
   };
 
-  const { data, error, isLoading } = useQuery<TasksResponse, Error>(
-    "tasks",
-    fetchTasks
-  );
+  const { data, error } = useQuery<TasksResponse, Error>("tasks", fetchTasks);
   const queryClient = useQueryClient(); // QueryClientを取得
 
   // if (isLoading) return <div>Loading...</div>;
