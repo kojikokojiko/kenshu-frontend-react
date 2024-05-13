@@ -73,6 +73,12 @@ export const App: React.FC = () => {
       >
         POST
       </button>
+      <button
+        onClick={handlePostClick}
+        className="bg-green-500 text-white font-bold py-2 px-4 rounded"
+      >
+        EDIT
+      </button>
     </div>
   );
 };
