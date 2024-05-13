@@ -5,9 +5,13 @@ init:
 	pnpm --filter api db:seed
 	pnpm --filter api build
 
-.PHONY: start
-start:
+.PHONY: api-start
+api-start:
 	pnpm --filter api start
+.PHONY:app-start
+
+app-start:
+	pnpm --filter @kenshu-frontend/app run dev
 
 .PHONY: open-db
 open-db:
