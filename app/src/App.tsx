@@ -1,5 +1,4 @@
 import { useQuery, useQueryClient } from "react-query";
-import classNames from "./App.module.css";
 import { useState } from "react";
 
 const tasksURL = "http://localhost:8000/api/tasks";
@@ -86,14 +85,10 @@ export const App: React.FC = () => {
     if (!response.ok) {
       throw new Error("Failed to fetch tasks");
     }
+    // ここであえて遅延を追加
+    await new Promise((resolve) => setTimeout(resolve, 1000)); // 2秒間の遅延
     return response.json();
   };
-
-  const { data, error, isLoading } = useQuery<TasksResponse, Error>(
-    "tasks",
-    fetchTasks
-  );
-  const queryClient = useQueryClient(); // QueryClientを取得
 
   const handlePostClick = async () => {
     try {
@@ -117,7 +112,10 @@ export const App: React.FC = () => {
     }
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  const { data, error } = useQuery<TasksResponse, Error>("tasks", fetchTasks);
+  const queryClient = useQueryClient(); // QueryClientを取得
+
+  // if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
   console.log(data);
